@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import math
 import numpy as np
 
 def on_segment(p, q, r):
@@ -105,21 +104,27 @@ def add_most_clockwise_point(points, rise_run):
     print("col")
     return False
 
-def plot_sequence(seq, ax, maxiter=100):
+def plot_sequence(seq, ax, maxiter=1000):
     points = []
+    ax.set_axis_off()
     for i in range(maxiter):
         if not add_most_clockwise_point(points, seq[i % len(seq)]):
             break
     
-    return draw_line_segments(points, ax)
+    draw_line_segments(points, ax)
+
+    numsegs = len(points)-1
+
+    ax.set_title(f"{' → '.join(f'{a}x{b}' for a, b in seq)}{'=' if numsegs < maxiter else '≥'}{numsegs}")
 
 if __name__ == "__main__":
 
-    fig, ax = plt.subplots(2,2)
+    dimx, dimy = 8, 8
 
-    plot_sequence([(1,0),(1,1)], ax[0, 0])
-    plot_sequence([(1,1),(1,2)], ax[0, 1])
-    plot_sequence([(1,1),(1,3)], ax[1, 1])
-    plot_sequence([(1,1),(1,4)], ax[1, 0])
+    fig, ax = plt.subplots(dimx, dimy)
+
+    for x in range(dimx):
+        for y in range(dimy):
+            plot_sequence([(1,x),(1,y)], ax[x, y])
 
     plt.show()
